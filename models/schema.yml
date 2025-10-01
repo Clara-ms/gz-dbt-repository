@@ -1,0 +1,153 @@
+version: 2
+sources:
+  - name: raw
+    schema: gz_raw_data #Path of the table in BQ
+    description: greenwez raw data source
+    tables:
+      - name: sales
+        identifier: raw_gz_sales #What is the exact name of the table in  BQ
+        description: sales of greewneez / we have one row per product_id found in each order_id
+        loaded_at_field: "CAST(date_date AS TIMESTAMP)"
+        freshness: 
+          warn_after: {count: 90, period: day}    
+           
+        columns:
+          - name: date_date
+            description: date of purchase
+          - name: orders_id
+            description: id of each order
+          - name: products_id
+            description: id of each product
+          - name: revenue
+            description: the revenue by a particular product in that order
+          - name: quantity
+            description: quantity of the product in that order
+          - name: "(orders_id || '-' || pdt_id)"
+            description: primary key of the table
+            tests:
+              - unique
+              - not_null
+              
+      - name: product
+        identifier: raw_gz_product
+        description: purchase_price by products_id
+        columns:
+          - name: products_id
+            description: id of each product
+            tests:
+              - unique
+              - not_null
+          - name: purchase_price
+            description: purchase price of each product
+      - name: ship
+        identifier: raw_gz_ship
+        description: shipping_fee and operational_costs by orders_id
+        columns:
+          - name: orders_id
+            description: id of each order
+            tests:
+              - unique
+              - not_null
+          - name: shipping_fee
+            description: shipping fee for each order
+          - name: log_cost
+            description: logistical cost for each order
+          - name: ship_cost
+            description: shipping cost for each order
+
+models:
+  - name: int_sales_margin
+    description: intermediate model with margin per product by joining raw_sales and raw_product
+    columns:
+      - name: date_date
+        tests:
+          - not_null
+      - name: orders_id
+        tests:
+          - not_null
+      - name: products_id
+        tests:
+          - not_null
+      - name: revenue
+        tests:
+          - not_null
+      - name: quantity
+        tests:
+          - not_null
+      - name: purchase_price
+        tests:
+          - not_null
+      - name: purchase_cost
+        description: quantity*purchase_price
+        tests:
+          - not_null
+      - name: margin
+        description: revenue-purchase_cost
+        tests:
+          - not_null
+      - name: "(orders_id || '-' || products_id)"
+        description: primary key of the table
+        tests:
+              - unique
+              - not_null
+  - name: int_orders_margin
+    description: intermediate model with margin per order by aggregating int_sales_margin per order
+    columns:
+      - name: orders_id
+        description: primary key
+        tests:
+          - unique
+          - not_null
+      - name: date_date
+        tests:
+          - not_null
+      - name: revenue
+        tests:
+          - not_null
+      - name: quantity
+        tests:
+          - not_null
+      - name: purchase_cost
+        tests:
+          - not_null
+      - name: margin
+        tests:
+          - not_null
+  - name: int_orders_operational
+    description: intermediate model with operational margin per order by joining int_orders_margin with raw_ship
+    columns:
+      - name: orders_id
+        description: primary key
+        tests:
+          - unique
+          - not_null
+      - name: date_date
+        tests:
+          - not_null
+      - name: revenue
+        tests:
+          - not_null
+      - name: quantity
+        tests:
+          - not_null
+      - name: purchase_cost
+        tests:
+          - not_null
+      - name: margin
+        tests:
+          - not_null
+      - name: shipping_fee
+        tests:
+          - not_null
+      - name: log_cost
+        tests:
+          - not_null
+      - name: ship_cost
+        tests:
+          - not_null
+      - name: operational_margin
+        description: margin + shipping_fee - log_cost - ship_cost
+        tests:
+          - not_null
+
+  
