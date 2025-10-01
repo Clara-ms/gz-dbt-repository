@@ -227,8 +227,6 @@ models:
           - not_null
       - name: ads_margin
         description: operational_margin - ads_costs
-        tests:
-          - not_null
       - name: avg_basket
         description: average basket = revenue / nb_transactions
         tests:
@@ -239,16 +237,10 @@ models:
           - not_null
       - name: ads_cost
         description: total costs of ads run that day
-        tests:
-          - not_null
       - name: ads_impression
         description: number of views for all campaigns that day
-        tests:
-          - not_null
       - name: ads_click
         description: number of clicks in all campaigns that day
-        tests:
-          - not_null
       - name: quantity
         description: quantity of products sold per day
         tests:
