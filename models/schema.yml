@@ -55,3 +55,99 @@ sources:
           - name: ship_cost
             description: shipping cost for each order
 
+models:
+  - name: int_sales_margin
+    description: intermediate model with margin per product by joining raw_sales and raw_product
+    columns:
+      - name: date_date
+        tests:
+          - not_null
+      - name: orders_id
+        tests:
+          - not_null
+      - name: products_id
+        tests:
+          - not_null
+      - name: revenue
+        tests:
+          - not_null
+      - name: quantity
+        tests:
+          - not_null
+      - name: purchase_price
+        tests:
+          - not_null
+      - name: purchase_cost
+        description: quantity*purchase_price
+        tests:
+          - not_null
+      - name: margin
+        description: revenue-purchase_cost
+        tests:
+          - not_null
+      - name: "(orders_id || '-' || products_id)"
+        description: primary key of the table
+        tests:
+              - unique
+              - not_null
+  - name: int_orders_margin
+    description: intermediate model with margin per order by aggregating int_sales_margin per order
+    columns:
+      - name: orders_id
+        description: primary key
+        tests:
+          - unique
+          - not_null
+      - name: date_date
+        tests:
+          - not_null
+      - name: revenue
+        tests:
+          - not_null
+      - name: quantity
+        tests:
+          - not_null
+      - name: purchase_cost
+        tests:
+          - not_null
+      - name: margin
+        tests:
+          - not_null
+  - name: int_orders_operational
+    description: intermediate model with operational margin per order by joining int_orders_margin with raw_ship
+    columns:
+      - name: orders_id
+        description: primary key
+        tests:
+          - unique
+          - not_null
+      - name: date_date
+        tests:
+          - not_null
+      - name: revenue
+        tests:
+          - not_null
+      - name: quantity
+        tests:
+          - not_null
+      - name: purchase_cost
+        tests:
+          - not_null
+      - name: margin
+        tests:
+          - not_null
+      - name: shipping_fee
+        tests:
+          - not_null
+      - name: log_cost
+        tests:
+          - not_null
+      - name: ship_cost
+        tests:
+          - not_null
+      - name: operational_margin
+        description: margin + shipping_fee - log_cost - ship_cost
+        tests:
+          - not_null
+
+  
