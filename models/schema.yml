@@ -54,6 +54,18 @@ sources:
             description: logistical cost for each order
           - name: ship_cost
             description: shipping cost for each order
+      - name: adwords
+        identifier: raw_gz_adwords
+        description: campaigns in adwords
+      - name: bing
+        identifier: raw_gz_bing
+        description: campaigns in bing
+      - name: criteo
+        identifier: raw_gz_criteo
+        description: campaigns in criteo
+      - name: facebook
+        identifier: raw_gz_facebook
+        description: campaigns in facebook
 
 models:
   - name: int_sales_margin
@@ -149,5 +161,111 @@ models:
         description: margin + shipping_fee - log_cost - ship_cost
         tests:
           - not_null
-
-  
+  - name: int_campaigns
+    description: info for all the campaigns run in adwords, bing, criteo and facebook
+    columns:
+      - name: date_date
+        description: date in which the campaign was run
+        tests:
+          - not_null
+      - name: paid_source
+        description: source in which each campaign was run
+        tests:
+          - not_null
+      - name: campaign_key
+        description: key of each campaign
+        tests:
+          - not_null
+      - name: campaign_name
+        description: name of each campaign
+        tests:
+          - not_null
+      - name: ads_cost
+        description: cost of running each campaign in its source
+        tests:
+          - not_null
+      - name: impression
+        description: number of views each campaign had
+        tests:
+          - not_null
+      - name: click
+        description: number of clicks to each campaign in their source 
+        tests:
+          - not_null
+      - name: "(date_date || '-' || campaign_key)"
+        description: primary key of the table
+        tests:
+          - unique
+          - not_null
+  - name: int_campaigns_day
+    description: aggregated version of int_campaigns model for each day
+    columns:
+      - name: date_date
+        description: each day at least a campaign was run, primary key
+        tests:
+          - unique
+          - not_null
+      - name: ads_cost
+        description: total costs of ads run that day
+        tests:
+          - not_null
+      - name: impression
+        description: number of views for all campaigns that day
+        tests:
+          - not_null
+      - name: click
+        description: number of clicks in all campaigns that day
+        tests:
+          - not_null
+  - name: finance_campaigns_day
+    description: mart model for finance team with data at a daily granularity with the added campaigns data
+    columns:
+      - name: date_date
+        description: primary key
+        tests:
+          - unique
+          - not_null
+      - name: ads_margin
+        description: operational_margin - ads_costs
+      - name: avg_basket
+        description: average basket = revenue / nb_transactions
+        tests:
+          - not_null
+      - name: operational_margin
+        description: margin + shipping_fee - log_cost - ship_cost
+        tests:
+          - not_null
+      - name: ads_cost
+        description: total costs of ads run that day
+      - name: ads_impression
+        description: number of views for all campaigns that day
+      - name: ads_click
+        description: number of clicks in all campaigns that day
+      - name: quantity
+        description: quantity of products sold per day
+        tests:
+          - not_null
+      - name: revenue
+        description: revenue generated per day
+        tests:
+          - not_null
+      - name: purchase_cost
+        description: purchasing cost of the products
+        tests:
+          - not_null
+      - name: margin
+        description: revenue - purchase_cost
+        tests:
+          - not_null
+      - name: shipping_fee
+        description: shipping fee payed by the client
+        tests:
+          - not_null
+      - name: log_cost
+        description: logistical costs
+        tests:
+          - not_null
+      - name: ship_cost
+        description: shipping costs
+        tests:
+          - not_null
