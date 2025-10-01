@@ -1,5 +1,5 @@
 SELECT
-    EXTRACT( MONTH FROM date_date) AS date_month,
+    CONCAT( EXTRACT(MONTH FROM date_date),'-', EXTRACT(YEAR FROM date_date)) AS date_month,
     ROUND(SUM(ads_margin),2) AS ads_margin,
     ROUND(SUM(avg_basket),2) AS avg_basket,
     ROUND(SUM(operational_margin),2) AS operational_margin,
