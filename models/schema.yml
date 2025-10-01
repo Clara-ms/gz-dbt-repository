@@ -217,3 +217,63 @@ models:
         description: number of clicks in all campaigns that day
         tests:
           - not_null
+  - name: finance_campaigns_day
+    description: mart model for finance team with data at a daily granularity with the added campaigns data
+    columns:
+      - name: date_date
+        description: primary key
+        tests:
+          - unique
+          - not_null
+      - name: ads_margin
+        description: operational_margin - ads_costs
+        tests:
+          - not_null
+      - name: avg_basket
+        description: average basket = revenue / nb_transactions
+        tests:
+          - not_null
+      - name: operational_margin
+        description: margin + shipping_fee - log_cost - ship_cost
+        tests:
+          - not_null
+      - name: ads_cost
+        description: total costs of ads run that day
+        tests:
+          - not_null
+      - name: ads_impression
+        description: number of views for all campaigns that day
+        tests:
+          - not_null
+      - name: ads_click
+        description: number of clicks in all campaigns that day
+        tests:
+          - not_null
+      - name: quantity
+        description: quantity of products sold per day
+        tests:
+          - not_null
+      - name: revenue
+        description: revenue generated per day
+        tests:
+          - not_null
+      - name: purchase_cost
+        description: purchasing cost of the products
+        tests:
+          - not_null
+      - name: margin
+        description: revenue - purchase_cost
+        tests:
+          - not_null
+      - name: shipping_fee
+        description: shipping fee payed by the client
+        tests:
+          - not_null
+      - name: log_cost
+        description: logistical costs
+        tests:
+          - not_null
+      - name: ship_cost
+        description: shipping costs
+        tests:
+          - not_null
