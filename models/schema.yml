@@ -54,6 +54,18 @@ sources:
             description: logistical cost for each order
           - name: ship_cost
             description: shipping cost for each order
+      - name: adwords
+        identifier: raw_gz_adwords
+        description: campaigns in adwords
+      - name: bing
+        identifier: raw_gz_bing
+        description: campaigns in bing
+      - name: criteo
+        identifier: raw_gz_criteo
+        description: campaigns in criteo
+      - name: facebook
+        identifier: raw_gz_facebook
+        description: campaigns in facebook
 
 models:
   - name: int_sales_margin
