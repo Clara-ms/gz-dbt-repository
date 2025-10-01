@@ -161,5 +161,39 @@ models:
         description: margin + shipping_fee - log_cost - ship_cost
         tests:
           - not_null
-
-  
+  - name: int_campaigns
+    description: info for all the campaigns run in adwords, bing, criteo and facebook
+    columns:
+      - name: date_date
+        description: date in which the campaign was run
+        tests:
+          - not_null
+      - name: paid_source
+        description: source in which each campaign was run
+        tests:
+          - not_null
+      - name: campaign_key
+        description: key of each campaign
+        tests:
+          - not_null
+      - name: campaign_name
+        description: name of each campaign
+        tests:
+          - not_null
+      - name: ads_cost
+        description: cost of running each campaign in its source
+        tests:
+          - not_null
+      - name: impression
+        description: number of views each campaign had
+        tests:
+          - not_null
+      - name: click
+        description: number of clicks to each campaign in their source 
+        tests:
+          - not_null
+      - name: "(date_date || '-' || campaign_key)"
+        description: primary key of the table
+        tests:
+          - unique
+          - not_null
