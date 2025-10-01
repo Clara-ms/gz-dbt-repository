@@ -9,5 +9,7 @@ WITH cost AS(
 )
 SELECT
     *,
-    ROUND(revenue-purchase_cost,2) AS margin
+    ROUND(revenue-purchase_cost,2) AS margin,
+    {{ margin_percent('revenue','purchase_cost',3) }} AS margin_percent
+
 FROM cost
